@@ -1,20 +1,25 @@
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 class Solution {
-    public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String,List<String>> hash=new HashMap<>();
-        for(String str:strs)
-        {
-            char[] charArray = str.toCharArray();
-            Arrays.sort(charArray);
-            String key = Arrays.toString(charArray);
-            if (!hash.containsKey(key))
+    public int longestConsecutive(int[] nums) {
+        int res=0;
+        Map<Integer,Integer> map=new HashMap<>();
+        for (int num : nums) {
+            if (!map.containsKey(num))
             {
-                List<String> list=new ArrayList<>();
-                hash.put(key,list);
+                int left=map.getOrDefault(num-1,0);
+                int right=map.getOrDefault(num+1,0);
+                int len=left+right+1;
+                res=Math.max(len,res);
+                map.put(num,-1);
+                map.put(num-left,len);
+                map.put(num+right,len);
             }
-            hash.get(key).add(str);
         }
-        return new ArrayList<>(hash.values());
+
+
+        return res;
+
     }
 }
