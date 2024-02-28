@@ -1,7 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
+import java.util.*;
 
 
 public class LeetCode {
@@ -12,28 +9,33 @@ public class LeetCode {
 }
 
 
-/*11. 盛最多水的容器
+/*
+15. 三数之和
+给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。请
 
-提示
-给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 。
-
-找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。
-
-返回容器可以储存的最大水量。
-
-说明：你不能倾斜容器。*/
+你返回所有和为 0 且不重复的三元组
+*/
 class Solution {
-    public int maxArea(int[] height) {
-        int res=0,i=0;
-        int j=height.length-1;
-        while (i<j)
-        {
-            res=Math.max(Math.min(height[i],height[j])*(j-i),res);
-            if (height[i]>=height[j])
-            {
-                j--;
-            }else {
-                i++;
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res=new ArrayList<>();
+        int n = nums.length;
+        for (int a = 0; a < n; a++) {
+            if (a>0&&nums[a]==nums[a-1])continue;
+
+            int c=n-1;
+            int target=-nums[a];
+
+            for (int b = a+1; b < n; b++) {
+                if (b>a+1&&nums[b]==nums[b-1])continue;
+                while (b<c && nums[b]+nums[c]>target)c--;
+                if (b==c)break;
+                if (nums[b]+nums[c]==target)
+                {
+                    List<Integer> list=new ArrayList<>();
+                    Collections.addAll(list,nums[a],nums[b],nums[c]);
+                    res.add(list);
+                }
             }
         }
         return res;
