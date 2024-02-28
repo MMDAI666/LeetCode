@@ -10,35 +10,65 @@ public class LeetCode {
 
 
 /*
-15. 三数之和
-给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。请
-
-你返回所有和为 0 且不重复的三元组
+42. 接雨水
+给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
 */
 class Solution {
-    public List<List<Integer>> threeSum(int[] nums) {
-        Arrays.sort(nums);
-        List<List<Integer>> res=new ArrayList<>();
-        int n = nums.length;
-        for (int a = 0; a < n; a++) {
-            if (a>0&&nums[a]==nums[a-1])continue;
+    public int trap(int[] height) {
+        int res=0;
+        int n = height.length;
+        if (n<=1)return 0;
 
-            int c=n-1;
-            int target=-nums[a];
+        int[] lMax = new int[n];//保存从左向右i的最大高度
+        lMax[0]=height[0];
 
-            for (int b = a+1; b < n; b++) {
-                if (b>a+1&&nums[b]==nums[b-1])continue;
-                while (b<c && nums[b]+nums[c]>target)c--;
-                if (b==c)break;
-                if (nums[b]+nums[c]==target)
-                {
-                    List<Integer> list=new ArrayList<>();
-                    Collections.addAll(list,nums[a],nums[b],nums[c]);
-                    res.add(list);
-                }
+        int[] rMax = new int[n];//保存从右向左i的最大高度
+        rMax[n-1]=height[n-1];
+        int j=n-2;
+
+        //遍历得到lMax和rMax
+        for (int i = 1; i < n; i++) {
+            lMax[i]=Math.max(height[i],lMax[i-1]);
+
+            rMax[j]=Math.max(height[j],rMax[j+1]);
+            j--;
+        }
+
+        //计算每个i位置能接的水量
+        for (int i = 0; i < n; i++) {
+            if (rMax[i]<=height[i] || lMax[i]<=height[i])continue;
+            res +=Math.min(rMax[i],lMax[i])-height[i];
+        }
+        return res;
+    }
+
+
+    //双指针
+    public int trap(int[] height){
+        int res=0;
+        int left=0;
+        int n=height.length;
+        int right=n-1;
+
+        int lMax=height[left];
+        int rMax=height[right];
+
+        while (left<right)
+        {
+            if (lMax>rMax)
+            {
+                if (rMax>height[right]) res+=rMax-height[right];
+                right--;
+                rMax=Math.max(height[right],rMax);
+            }
+            else {
+                if (lMax>height[left]) res+=lMax-height[left];
+                left++;
+                lMax=Math.max(height[left],lMax);
             }
         }
         return res;
+
     }
 }
 
