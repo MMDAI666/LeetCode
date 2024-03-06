@@ -13,38 +13,59 @@ public class LeetCode {
 
 /*
 *
-560. 和为 K 的子数组
-给你一个整数数组 nums 和一个整数 k ，请你统计并返回 该数组中和为 k 的子数组的个数 。
-子数组是数组中元素的连续非空序列。
+143. 重排链表
+* 给定一个单链表 L 的头节点 head ，单链表 L 表示为：
+
+L0 → L1 → … → Ln - 1 → Ln
+请将其重新排列后变为：
+
+L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
 */
+//Definition for singly-linked list.
+ class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}
+
 class Solution {
-    public int subarraySum(int[] nums, int k) {
-        int ans=0;
-        for (int i = 0; i < nums.length; i++) {
-            int sum= 0;
-            for (int j = i; j >=0; j--) {
-                sum+=nums[j];
-                if (sum==k)ans++;
-            }
+    public void reorderList(ListNode head) {
+
+        List<ListNode> list=new ArrayList<>();
+        ListNode ans=head;
+        while (head!=null)
+        {
+            list.add(head);
+            head=head.next;
         }
-        return ans;
-    }
-    public int presubarraySum(int[] nums, int k) {
-        int ans=0;
-        int pre=0;
-        Map<Integer,Integer> map=new HashMap<>();
-        map.put(0,1);
-        for (int i = 0; i < nums.length; i++) {
-            pre+=nums[i];
-            if (map.containsKey(pre-k))
+
+
+        int len=list.size();
+        int j=len-1;
+        boolean flag=true;
+        for (int i = 0; i <j; ) {
+            //ans=ans.next;
+            //ans=list.get(i);
+            if (ans==null)return;
+            if (flag)
             {
-                ans+=map.get(pre-k);
+                ans.next=list.get(j);
+                j--;
+                flag=false;
             }
-            map.put(pre,map.getOrDefault(pre,0)+1);
-
+            else {
+                ans.next=list.get(i);
+                i++;
+                flag=true;
+            }
+            ans=ans.next;
         }
+        ans.next=null;
 
-        return ans;
+
     }
 
 }
