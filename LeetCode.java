@@ -5,7 +5,8 @@ import java.util.stream.Stream;
 
 public class LeetCode {
     public static void main(String[] args) {
-
+        String s = "cabwefgewcwaefgcf", t = "cae";
+        System.out.println(new Solution().minWindow(s,t));
 
     }
 }
@@ -13,95 +14,54 @@ public class LeetCode {
 
 /*
 *
-给你一个整数数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。
-* 你只可以看到在滑动窗口内的 k 个数字。滑动窗口每次只向右移动一位。
-返回 滑动窗口中的最大值 。
+*76. 最小覆盖子串
+* 给你一个字符串 s 、一个字符串 t 。
+* 返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。
 */
 
 class Solution {
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        if (nums.length==1)return new int[]{nums[0]};
+    Map<Character, Integer> ori = new HashMap<Character, Integer>();
+    Map<Character, Integer> cnt = new HashMap<Character, Integer>();
 
-        int[] ans=new int[nums.length-k+1];
-        int max=nums[0];
-        //计算出第一个窗口的max
-        for (int i = 0; i < k; i++) {
-            if (nums[i]>max) {
-                max = nums[i];
-            }
+    public String minWindow(String s, String t) {
+        int tLen = t.length();
+        for (int i = 0; i < tLen; i++) {
+            char c = t.charAt(i);
+            ori.put(c, ori.getOrDefault(c, 0) + 1);
         }
-        ans[0]=max;
-        if (k==nums.length)return ans;
-
-        //计算窗口内最大的数的个数
-        int maxNum=0;
-        for (int i = 0; i < k; i++) {
-            if (nums[i]==max)maxNum++;
-        }
-        int count=1;
-        int r=k;//r为即将进入窗口的元素，l为即将离开窗口的元素
-
-        for (int l = 0; l < nums.length-k; l++) {
-            //右边加一个
-            if (nums[r]>=max) {
-                if (nums[r]==max)
-                {
-                    maxNum++;
-                }else maxNum=1;
-                max = nums[r];
+        int l = 0, r = -1;
+        int len = Integer.MAX_VALUE, ansL = -1, ansR = -1;
+        int sLen = s.length();
+        while (r < sLen) {
+            ++r;
+            if (r < sLen && ori.containsKey(s.charAt(r))) {
+                cnt.put(s.charAt(r), cnt.getOrDefault(s.charAt(r), 0) + 1);
             }
-
-            //左边减一个
-            if (nums[l]>=max)
-            {
-                maxNum--;
-                if (maxNum==0)
-                {//去掉了唯一最大值，更新最大值
-                    max=nums[l+1];
-                    for (int j=l+1;j<=r;j++)
-                    {
-                        if (nums[j]>max)max=nums[j];
-                    }
-                    for (int j=l+1;j<=r;j++)
-                    {
-                        if (nums[j]==max)maxNum++;
-                    }
+            while (check() && l <= r) {
+                if (r - l + 1 < len) {
+                    len = r - l + 1;
+                    ansL = l;
+                    ansR = l + len;
                 }
+                if (ori.containsKey(s.charAt(l))) {
+                    cnt.put(s.charAt(l), cnt.getOrDefault(s.charAt(l), 0) - 1);
+                }
+                ++l;
             }
-            r++;
-            ans[count++]=max;
-
         }
-        return ans;
+        return ansL == -1 ? "" : s.substring(ansL, ansR);
     }
 
-    //单调队列
-    public int[] maxSlidingWindowByQueue(int[] nums, int k) {
-        if (nums.length==1)return new int[]{nums[0]};
-        int n=nums.length;
-        int[] ans=new int[nums.length-k+1];
-        Deque<Integer> deque=new ArrayDeque<>();
-        for (int i = 0; i < k; i++) {
-            while (!deque.isEmpty()&&nums[i]>=deque.peekLast())
-            {
-                deque.pollLast();
+    public boolean check() {
+        Iterator iter = ori.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            Character key = (Character) entry.getKey();
+            Integer val = (Integer) entry.getValue();
+            if (cnt.getOrDefault(key, 0) < val) {
+                return false;
             }
-            deque.offerLast(i);
         }
-        ans[0]=nums[deque.peekFirst()];
-
-        for (int i = k; i < n; ++i) {
-            while (!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]) {
-                deque.pollLast();
-            }
-            deque.offerLast(i);
-            while (deque.peekFirst() <= i - k) {
-                deque.pollFirst();
-            }
-            ans[i - k + 1] = nums[deque.peekFirst()];
-        }
-        return ans;
-
-
+        return true;
     }
 }
