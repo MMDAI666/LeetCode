@@ -12,30 +12,26 @@ public class LeetCode {
 /*
 *
 *
-以数组 intervals 表示若干个区间的集合，
-* 其中单个区间为 intervals[i] = [starti, endi] 。
-* 请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
+* 189. 轮转数组
+给定一个整数数组 nums，将数组中的元素向右轮转 k 个位置，其中 k 是非负数。
 
 
 */
 class Solution {
-    public int[][] merge(int[][] intervals) {
-        if (intervals.length==0)return new int[0][2];
-        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
-        List<int[]> res=new ArrayList<>();
-        res.add(intervals[0]);
-        int count=0;
-        for (int i = 1; i < intervals.length; i++) {
-          if (intervals[i][0]<=res.get(count)[1]) {
-              if (intervals[i][1]>res.get(count)[1]) res.get(count)[1] = intervals[i][1];
-          }
-          else {
-              count++;
-              res.add(intervals[i]);
-          }
+    public void rotate(int[] nums, int k) {
+        k %= nums.length;
+        reverse(nums, 0, nums.length - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, nums.length - 1);
+    }
+
+    public void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start += 1;
+            end -= 1;
         }
-
-        return res.toArray(new int[res.size()][]);
-
     }
 }
