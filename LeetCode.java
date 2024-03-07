@@ -5,8 +5,7 @@ import java.util.stream.Stream;
 
 public class LeetCode {
     public static void main(String[] args) {
-        String s = "cabwefgewcwaefgcf", t = "cae";
-        System.out.println(new Solution().minWindow(s,t));
+
 
     }
 }
@@ -14,54 +13,34 @@ public class LeetCode {
 
 /*
 *
-*76. 最小覆盖子串
-* 给你一个字符串 s 、一个字符串 t 。
-* 返回 s 中涵盖 t 所有字符的最小子串。如果 s 中不存在涵盖 t 所有字符的子串，则返回空字符串 "" 。
+53. 最大子数组和
+* 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+
+子数组
+是数组中的一个连续部分。
 */
-
 class Solution {
-    Map<Character, Integer> ori = new HashMap<Character, Integer>();
-    Map<Character, Integer> cnt = new HashMap<Character, Integer>();
-
-    public String minWindow(String s, String t) {
-        int tLen = t.length();
-        for (int i = 0; i < tLen; i++) {
-            char c = t.charAt(i);
-            ori.put(c, ori.getOrDefault(c, 0) + 1);
+    public int maxSubArray(int[] nums) {
+        int len=nums.length;
+        int[] dp=new int[len];
+        int ans=nums[0];
+        dp[0]=nums[0];
+        for (int i = 1; i < len; i++) {
+            dp[i]=Math.max(dp[i-1]+nums[i],nums[i]);
+            if (dp[i]>ans)ans=dp[i];
         }
-        int l = 0, r = -1;
-        int len = Integer.MAX_VALUE, ansL = -1, ansR = -1;
-        int sLen = s.length();
-        while (r < sLen) {
-            ++r;
-            if (r < sLen && ori.containsKey(s.charAt(r))) {
-                cnt.put(s.charAt(r), cnt.getOrDefault(s.charAt(r), 0) + 1);
-            }
-            while (check() && l <= r) {
-                if (r - l + 1 < len) {
-                    len = r - l + 1;
-                    ansL = l;
-                    ansR = l + len;
-                }
-                if (ori.containsKey(s.charAt(l))) {
-                    cnt.put(s.charAt(l), cnt.getOrDefault(s.charAt(l), 0) - 1);
-                }
-                ++l;
-            }
-        }
-        return ansL == -1 ? "" : s.substring(ansL, ansR);
+        return ans;
     }
 
-    public boolean check() {
-        Iterator iter = ori.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            Character key = (Character) entry.getKey();
-            Integer val = (Integer) entry.getValue();
-            if (cnt.getOrDefault(key, 0) < val) {
-                return false;
-            }
+    public int maxSubArray(int[] nums) {
+        int len=nums.length;
+        int pre=nums[0];
+        int ans=nums[0];
+
+        for (int i = 1; i < len; i++) {
+            pre=Math.max(pre+nums[i],nums[i]);
+            if (pre>ans)ans=pre;
         }
-        return true;
+        return ans;
     }
 }
