@@ -1,6 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class LeetCode {
@@ -13,34 +11,31 @@ public class LeetCode {
 
 /*
 *
-53. 最大子数组和
-* 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+*
+以数组 intervals 表示若干个区间的集合，
+* 其中单个区间为 intervals[i] = [starti, endi] 。
+* 请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
 
-子数组
-是数组中的一个连续部分。
+
 */
 class Solution {
-    public int maxSubArray(int[] nums) {
-        int len=nums.length;
-        int[] dp=new int[len];
-        int ans=nums[0];
-        dp[0]=nums[0];
-        for (int i = 1; i < len; i++) {
-            dp[i]=Math.max(dp[i-1]+nums[i],nums[i]);
-            if (dp[i]>ans)ans=dp[i];
+    public int[][] merge(int[][] intervals) {
+        if (intervals.length==0)return new int[0][2];
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+        List<int[]> res=new ArrayList<>();
+        res.add(intervals[0]);
+        int count=0;
+        for (int i = 1; i < intervals.length; i++) {
+          if (intervals[i][0]<=res.get(count)[1]) {
+              if (intervals[i][1]>res.get(count)[1]) res.get(count)[1] = intervals[i][1];
+          }
+          else {
+              count++;
+              res.add(intervals[i]);
+          }
         }
-        return ans;
-    }
 
-    public int maxSubArray(int[] nums) {
-        int len=nums.length;
-        int pre=nums[0];
-        int ans=nums[0];
+        return res.toArray(new int[res.size()][]);
 
-        for (int i = 1; i < len; i++) {
-            pre=Math.max(pre+nums[i],nums[i]);
-            if (pre>ans)ans=pre;
-        }
-        return ans;
     }
 }
