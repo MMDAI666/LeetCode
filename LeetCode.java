@@ -4,42 +4,41 @@ import java.util.stream.Collectors;
 
 public class LeetCode {
     public static void main(String[] args) {
-        int[][] ma = {
-                {1, 2, 3, 4},
+        int [][] ma={
+                {1,2,3},
+                {4,5,6},
+                {7,8,9}
         };
-        System.out.println(new Solution().spiralOrder(ma));
+        new Solution().rotate(ma);
+        System.out.println(Arrays.deepToString(ma));
+
     }
 }
 
 
 class Solution {
-    public List<Integer> spiralOrder(int[][] matrix) {
-        List<Integer> order = new ArrayList<Integer>();
-        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
-            return order;
+
+    public void rotate(int[][] matrix) {
+        int temp=0;
+        //对角线交换
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j =i+1; j < n; j++) {
+                //交换（i，j）和（j，i）
+                temp=matrix[i][j];
+                matrix[i][j]=matrix[j][i];
+                matrix[j][i]=temp;
+            }
         }
-        int rows = matrix.length, columns = matrix[0].length;
-        int left = 0, right = columns - 1, top = 0, bottom = rows - 1;
-        while (left <= right && top <= bottom) {
-            for (int column = left; column <= right; column++) {
-                order.add(matrix[top][column]);
+        //逐行逆序
+        for (int i = 0; i < n; i++) {
+            for (int j =0; j < n/2; j++) {
+                temp=matrix[i][j];
+                matrix[i][j]=matrix[i][n-j-1];
+                matrix[i][n-j-1]=temp;
             }
-            for (int row = top + 1; row <= bottom; row++) {
-                order.add(matrix[row][right]);
-            }
-            if (left < right && top < bottom) {
-                for (int column = right - 1; column > left; column--) {
-                    order.add(matrix[bottom][column]);
-                }
-                for (int row = bottom; row > top; row--) {
-                    order.add(matrix[row][left]);
-                }
-            }
-            left++;
-            right--;
-            top++;
-            bottom--;
         }
-        return order;
+
     }
 }
+
