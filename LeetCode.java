@@ -21,33 +21,34 @@ class ListNode {
 }
 
 class Solution {
-    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        if (list1==null ||list2==null)return list1==null?list2:list1;
-        ListNode head;
-        if (list1.val<=list2.val)
-        {
-            head=list1;
-            list1= list1.next;
-        }else
-        {
-            head=list2;
-            list2=list2.next;
-        }
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1==null || l2==null)return l1==null?l2:l1;
+        ListNode head=new ListNode(l1.val+ l2.val);
         ListNode res=head;
-        while (list1!=null &&list2!=null)
+
+        l1=l1.next;
+       l2=l2.next;
+        boolean temp=head.val>=10;
+        if (temp)head.val-=10;
+        while (l1!=null || l2!=null)
         {
-            if (list1.val<=list2.val)
-            {
-                head.next=list1;
-                list1= list1.next;
-            }else
-            {
-                head.next=list2;
-                list2=list2.next;
+            int n1 = l1 != null ? l1.val : 0;
+            int n2 = l2 != null ? l2.val : 0;
+            int var=n1+n2;
+            if (temp) {
+                var ++;
+                temp=false;
             }
+            if (var>=10) {
+                temp = true;
+                var-=10;
+            }
+            head.next=new ListNode(var);
             head=head.next;
+            if (l1!=null)l1=l1.next;
+            if (l2!=null)l2=l2.next;
         }
-        head.next=list1==null?list2:list1;
+        if (temp)head.next=new ListNode(1);
         return res;
     }
 }
