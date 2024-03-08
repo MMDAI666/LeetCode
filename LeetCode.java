@@ -18,31 +18,27 @@ class ListNode {
         val = x;
         next = null;
     }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
 }
 
 class Solution {
-    public ListNode removeNthFromEnd(ListNode head, int n) {
-        ListNode ago=head;
-        ListNode after=head;
-        ListNode pre=null;
-        int count=0;
-        while (ago!=null && count<n)
+    public ListNode swapPairs(ListNode head) {
+        if (head==null ||head.next==null)return head;
+        ListNode pre=new ListNode(0,head);
+        ListNode temp=pre;
+        while (temp.next !=null &&temp.next.next !=null)
         {
-            ago=ago.next;
-            count++;
-        }
-        if (count!=n)return null;
-        while (ago!=null)
-        {
-            pre=after;
-            ago=ago.next;
-            after= after.next;
-        }
-        if (pre==null)return head.next;
-        pre.next=after.next;
-        after.next=null;
+            ListNode node1=temp.next;
+            ListNode node2=temp.next.next;
 
-        return head;
+            temp.next=node2;
+            node1.next=node2.next;
+            node2.next=node1;
 
+            temp=node1;
+
+        }
+
+        return pre.next;
     }
 }
