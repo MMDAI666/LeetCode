@@ -22,23 +22,45 @@ class ListNode {
 }
 
 class Solution {
-    public ListNode swapPairs(ListNode head) {
-        if (head==null ||head.next==null)return head;
-        ListNode pre=new ListNode(0,head);
-        ListNode temp=pre;
-        while (temp.next !=null &&temp.next.next !=null)
+    public ListNode reverseKGroup(ListNode head, int k) {
+        ListNode hair=new ListNode(0,head);
+        ListNode pre=hair;
+        ListNode tail=hair;
+
+        while (head!=null)
         {
-            ListNode node1=temp.next;
-            ListNode node2=temp.next.next;
+            for (int i = 0; i < k; i++) {
+                tail=tail.next;
+                if (tail==null)return hair.next;
+            }
 
-            temp.next=node2;
-            node1.next=node2.next;
-            node2.next=node1;
+            ListNode nex=tail.next;
+            ListNode[] re=myreverse(head,tail);
+            head=re[0];
+            tail=re[1];
+            tail.next=nex;
+            pre.next=head;
 
-            temp=node1;
-
+            for (int i = 0; i < k; i++) {
+                pre=pre.next;
+                head=head.next;
+            }
         }
+        return hair.next;
 
-        return pre.next;
+    }
+
+    private ListNode[] myreverse(ListNode head, ListNode tail) {
+        ListNode prev = tail.next;
+        ListNode p = head;
+        while (prev!=tail)
+        {
+            ListNode nex = p.next;
+            p.next = prev;
+            prev = p;
+            p = nex;
+        }
+        return new ListNode[]{tail,head};
+
     }
 }
