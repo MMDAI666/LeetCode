@@ -21,6 +21,29 @@ class ListNode {
 }
 
 class Solution {
+
+    public boolean isPalindrome(ListNode head) {
+        ListNode midNode = findMidNode(head);
+        ListNode last = reverseList(midNode);
+        while (last!=null&&head!=null)
+        {
+            if (head.val!=last.val)return false;
+            last=last.next;
+            head=head.next;
+        }
+        return true;
+    }
+    public ListNode findMidNode(ListNode head)
+    {
+        ListNode fast=head;
+        ListNode slow=head;
+        while (fast!=null&&fast.next!=null)
+        {
+            fast=fast.next.next;
+            slow=slow.next;
+        }
+        return slow;
+    }
     public ListNode reverseList(ListNode head) {
         if (head==null ||head.next==null)return head;
         ListNode pre=null;
