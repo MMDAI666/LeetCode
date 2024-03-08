@@ -10,16 +10,30 @@ public class LeetCode {
 }
 
 
-public class Solution {
-    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        if (headA == null || headB == null) {
-            return null;
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode(int x) {
+        val = x;
+        next = null;
+    }
+}
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        if (head==null ||head.next==null)return head;
+        ListNode pre=null;
+        ListNode behind=head.next;
+
+        while (behind!=null)
+        {
+            head.next=pre;
+            pre=head;
+            head=behind;
+            behind=head.next;
         }
-        ListNode pA = headA, pB = headB;
-        while (pA != pB) {
-            pA = pA == null ? headB : pA.next;
-            pB = pB == null ? headA : pB.next;
-        }
-        return pA;
+        head.next=pre;
+        return head;
     }
 }
