@@ -9,59 +9,117 @@ public class LeetCode
     public static void main(String[] args)
     {
 
-
+        LRUCache cache=new LRUCache(2);
+        cache.put(2,1);
+        cache.put(1,1);
+        cache.put(2,3);
+        cache.put(4,1);
+        System.out.println(cache.get(1));
+        System.out.println(cache.get(2));
     }
 }
 
 
-class ListNode
-{
-    int val;
-    ListNode next;
-
-    ListNode()
-    {
-    }
-
-    ListNode(int val)
-    {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next)
-    {
-        this.val = val;
-        this.next = next;
-    }
-}
-
-class Solution
+class LRUCache
 {
 
+    class DLinkedNode {
+        int key;
+        int value;
+        DLinkedNode prev;
+        DLinkedNode next;
+        public DLinkedNode() {}
+        public DLinkedNode(int _key, int _value) {key = _key; value = _value;}
+    }
 
-    public ListNode mergeKLists(ListNode[] lists)
+    private int capacity;
+    private int size;
+    private DLinkedNode head,tail;
+
+    private HashMap<Integer,DLinkedNode> map;
+
+    public LRUCache(int capacity)
     {
-        ListNode pre = new ListNode(0);
-        ListNode head = pre;
-        PriorityQueue<ListNode> pq = new PriorityQueue<>(((o1, o2) -> o1.val - o2.val));
-        for (ListNode list : lists)
+        this.capacity=capacity;
+        size=0;
+        map=new HashMap<>(capacity);
+
+        head=new DLinkedNode();
+        tail = new DLinkedNode();
+
+        head.next=tail;
+
+        tail.prev=head;
+
+    }
+
+    public int get(int key)
+    {
+        DLinkedNode node = map.get(key);
+        if (node==null)return  -1;
+        node.prev.next=node.next;
+        node.next.prev=node.prev;
+
+        node.prev=head;
+        node.next=head.next;
+
+        head.next.prev=node;
+        head.next=node;
+        return node.value;
+
+    }
+
+    public void put(int key, int value)
+    {
+        if (map.containsKey(key))
         {
-            if (list != null)
-            {
-                pq.add(list);
-            }
+            DLinkedNode node = map.get(key);
+
+            node.prev.next=node.next;
+            node.next.prev=node.prev;
+
+            node.prev=head;
+            node.next=head.next;
+
+            head.next.prev=node;
+            head.next=node;
+
+            node.value=value;
+
         }
-        ListNode temp = null;
-        while (!pq.isEmpty())
+        else if (size>=capacity)
         {
-            temp = pq.poll();
-            head.next = temp;
-            temp = temp.next;
-            head=head.next;
-            if (temp == null) continue;
-            pq.add(temp);
+
+            DLinkedNode node=tail.prev;
+
+            node.prev.next=node.next;
+            node.next.prev=node.prev;
+
+            node.prev=head;
+            node.next=head.next;
+
+            head.next.prev=node;
+            head.next=node;
+
+
+            map.remove(node.key);
+            node.key=key;
+            node.value=value;
+            map.put(key,node);
+        }else
+        {
+            DLinkedNode node=new DLinkedNode(key,value);
+            node.prev=head;
+            node.next=head.next;
+
+            head.next.prev=node;
+            head.next=node;
+
+            map.put(key,node);
+            size++;
+
         }
-        return pre.next;
     }
 
 }
+
