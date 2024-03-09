@@ -36,16 +36,10 @@ class TreeNode
     }
 }
 
-class Solution
-{
-    public List<Integer> inorderTraversal(TreeNode root)
-    {
-        List<Integer> ans=new ArrayList<>();
-        if (root==null)return ans;
-        ans.addAll(inorderTraversal(root.left));
-        ans.add(root.val);
-        ans.addAll(inorderTraversal(root.right));
-        return ans;
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if (root==null)return 0;
+        return Math.max(maxDepth(root.left),maxDepth(root.right))+1;
     }
 }
 
