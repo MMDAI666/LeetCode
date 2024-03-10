@@ -37,31 +37,25 @@ class TreeNode
 }
 
 class Solution {
-    private static final boolean WHITE=true;
-    private static final boolean GREY=false;
-    public int kthSmallest(TreeNode root, int k) {
-        if (root==null) return 0;
-        int count=0;
-        Deque<Object> stack=new LinkedList<>();
-        stack.push(root);
-        stack.push(WHITE);
-        while (!stack.isEmpty())
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> ans=new ArrayList<>();
+        if (root==null)return ans;
+        Deque<TreeNode> deque=new ArrayDeque<>();
+        deque.offer(root);
+        while (!deque.isEmpty())
         {
-            boolean flag=(boolean) stack.pop();
-            TreeNode node=(TreeNode)stack.pop();
-            if (node==null)continue;
-            if (flag)
+            int len=deque.size();
+            for (int i = 0; i < len; i++)
             {
-                stack.push(node.right);
-                stack.push(WHITE);
-                stack.push(node);
-                stack.push(GREY);
-                stack.push(node.left);
-                stack.push(WHITE);
-            }else count++;
-            if (count==k)return node.val;
+                TreeNode node = deque.poll();
+                if (node.left!=null)deque.offer(node.left);
+                if (node.right!=null)deque.offer(node.right);
+                if (i==len-1)ans.add(node.val);
+            }
         }
-        return 0;
+
+        return ans;
     }
 }
+
 
