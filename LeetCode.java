@@ -37,16 +37,31 @@ class TreeNode
 }
 
 class Solution {
-    long pre=Long.MIN_VALUE;
-    public boolean isValidBST(TreeNode root) {
-        if (root==null)return true;
-        boolean l = isValidBST(root.left);
-        if (root.val<=pre)return  false;
-        pre= root.val;
-        boolean r = isValidBST(root.right);
-        return l&&r;
-
+    private static final boolean WHITE=true;
+    private static final boolean GREY=false;
+    public int kthSmallest(TreeNode root, int k) {
+        if (root==null) return 0;
+        int count=0;
+        Deque<Object> stack=new LinkedList<>();
+        stack.push(root);
+        stack.push(WHITE);
+        while (!stack.isEmpty())
+        {
+            boolean flag=(boolean) stack.pop();
+            TreeNode node=(TreeNode)stack.pop();
+            if (node==null)continue;
+            if (flag)
+            {
+                stack.push(node.right);
+                stack.push(WHITE);
+                stack.push(node);
+                stack.push(GREY);
+                stack.push(node.left);
+                stack.push(WHITE);
+            }else count++;
+            if (count==k)return node.val;
+        }
+        return 0;
     }
 }
-
 
