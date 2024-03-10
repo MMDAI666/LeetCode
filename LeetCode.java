@@ -37,19 +37,15 @@ class TreeNode
 }
 
 class Solution {
-    public TreeNode sortedArrayToBST(int[] nums) {
-        return getRoot(nums,0,nums.length);
+    long pre=Long.MIN_VALUE;
+    public boolean isValidBST(TreeNode root) {
+        if (root==null)return true;
+        boolean l = isValidBST(root.left);
+        if (root.val<=pre)return  false;
+        pre= root.val;
+        boolean r = isValidBST(root.right);
+        return l&&r;
 
-    }
-
-    public static TreeNode getRoot(int[] nums,int left,int right)
-    {
-        if (left>right)return null;
-        int mid=(left+right)/2;
-        TreeNode root=new TreeNode(nums[mid]);
-        root.left=getRoot(nums,left,mid-1);
-        root.right=getRoot(nums,mid+1,right);
-        return root;
     }
 }
 
