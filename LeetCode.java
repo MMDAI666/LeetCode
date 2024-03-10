@@ -37,25 +37,19 @@ class TreeNode
 }
 
 class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> ans=new ArrayList<>();
-        if (root==null)return ans;
-        Deque<TreeNode> dq=new ArrayDeque<>();
-        dq.offerFirst(root);
-        while (!dq.isEmpty())
-        {
-            int len=dq.size();
-            List<Integer> res=new ArrayList<>();
-            for (int i = 0; i < len; i++)
-            {
-                TreeNode temp=dq.pollFirst();
-                res.add(temp.val);
-                if (temp.left!=null)dq.offerLast(temp.left);
-                if (temp.right!=null)dq.offerLast(temp.right);
-            }
-            ans.add(res);
-        }
-        return ans;
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return getRoot(nums,0,nums.length);
+
+    }
+
+    public static TreeNode getRoot(int[] nums,int left,int right)
+    {
+        if (left>right)return null;
+        int mid=(left+right)/2;
+        TreeNode root=new TreeNode(nums[mid]);
+        root.left=getRoot(nums,left,mid-1);
+        root.right=getRoot(nums,mid+1,right);
+        return root;
     }
 }
 
