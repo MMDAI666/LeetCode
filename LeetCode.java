@@ -37,23 +37,27 @@ class TreeNode
 }
 
 class Solution {
-    public void flatten(TreeNode root) {
-        if (root==null ||(root.left==null&&root.right==null))return;
-
-        while (root!=null)
+    HashMap<Integer,Integer> map;
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        map=new HashMap<>(preorder.length);
+        for (int i = 0; i < inorder.length; i++)
         {
-            while (root.right!=null&&root.left==null)root=root.right;
-
-            TreeNode temp=root.right;
-            root.right=root.left;
-            root.left=null;
-            TreeNode maxRight=root;
-            while (maxRight.right!=null)maxRight=maxRight.right;
-            maxRight.right=temp;
-
-            root=root.right;
+            map.put(inorder[i],i );
         }
 
+        return getRoot(preorder,inorder,0,preorder.length-1,0,inorder.length-1);
+    }
+
+    public TreeNode getRoot(int[] preorder, int[] inorder,int preleft,int preright,int inoleft,int inoright)
+    {
+        if (preleft>preright && inoleft>inoright)return new TreeNode(preorder[preleft]);
+
+        Integer rootIndex = map.get(preorder[preleft]);
+        int len=rootIndex-inoleft;
+        TreeNode root=new TreeNode(preorder[preleft]);
+        root.left=getRoot(preorder,inorder,preleft+1,preleft+len,inoleft, rootIndex-1);
+        root.right=getRoot(preorder,inorder,preleft+len+1,preright, rootIndex+1,inoright);
+        return root;
     }
 }
 
