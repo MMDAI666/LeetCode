@@ -37,24 +37,23 @@ class TreeNode
 }
 
 class Solution {
-    public List<Integer> rightSideView(TreeNode root) {
-        List<Integer> ans=new ArrayList<>();
-        if (root==null)return ans;
-        Deque<TreeNode> deque=new ArrayDeque<>();
-        deque.offer(root);
-        while (!deque.isEmpty())
+    public void flatten(TreeNode root) {
+        if (root==null ||(root.left==null&&root.right==null))return;
+
+        while (root!=null)
         {
-            int len=deque.size();
-            for (int i = 0; i < len; i++)
-            {
-                TreeNode node = deque.poll();
-                if (node.left!=null)deque.offer(node.left);
-                if (node.right!=null)deque.offer(node.right);
-                if (i==len-1)ans.add(node.val);
-            }
+            while (root.right!=null&&root.left==null)root=root.right;
+
+            TreeNode temp=root.right;
+            root.right=root.left;
+            root.left=null;
+            TreeNode maxRight=root;
+            while (maxRight.right!=null)maxRight=maxRight.right;
+            maxRight.right=temp;
+
+            root=root.right;
         }
 
-        return ans;
     }
 }
 
