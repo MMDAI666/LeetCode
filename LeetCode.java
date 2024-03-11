@@ -31,36 +31,22 @@ class TreeNode {
 }
 
 class Solution {
-    Map<Integer,TreeNode>parent =new HashMap<>();
-    Set<Integer> visited=new HashSet<>();
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        dfs(root);
-        while (p!=null)
-        {
-            visited.add(p.val);
-            p = parent.get(p.val);
-        }
-        while (q!=null)
-        {
-            if (visited.contains(q.val))return q;
-            q=parent.get(q.val);
-        }
-        return null;
+    int sum=Integer.MIN_VALUE;;
+    public int maxPathSum(TreeNode root) {
+        maxSum(root);
+        return sum;
     }
 
-    private void dfs(TreeNode root)
+    public int maxSum(TreeNode root)
     {
-        if (root==null)return;
-        if (root.left!=null)
-        {
-            parent.put(root.left.val,root);
-            dfs(root.left);
-        }
-        if (root.right!=null)
-        {
-            parent.put(root.right.val,root);
-            dfs(root.right);
-        }
+        if (root==null)return 0;
+        int left=Math.max(maxSum(root.left),0);
+        int right=Math.max(maxSum(root.right),0);
+        int maxsum = root.val + left+right;
+
+        sum=Math.max(sum,maxsum);
+
+        return root.val + Math.max(left,right);
     }
 }
 
