@@ -4,32 +4,26 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class LeetCode
-{
-    public static void main(String[] args)
-    {
+public class LeetCode {
+    public static void main(String[] args) {
 
     }
 }
 
 
-class TreeNode
-{
+class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
 
-    TreeNode()
-    {
+    TreeNode() {
     }
 
-    TreeNode(int val)
-    {
+    TreeNode(int val) {
         this.val = val;
     }
 
-    TreeNode(int val, TreeNode left, TreeNode right)
-    {
+    TreeNode(int val, TreeNode left, TreeNode right) {
         this.val = val;
         this.left = left;
         this.right = right;
@@ -37,28 +31,51 @@ class TreeNode
 }
 
 class Solution {
-    HashMap<Integer,Integer> map;
-    public TreeNode buildTree(int[] preorder, int[] inorder) {
-        map=new HashMap<>(preorder.length);
-        for (int i = 0; i < inorder.length; i++)
-        {
-            map.put(inorder[i],i );
-        }
-
-        return getRoot(preorder,inorder,0,preorder.length-1,0,inorder.length-1);
+    public int pathSum(TreeNode root, int targetSum) {
+        if (root==null)return 0;
+        int res=rootSum(root,targetSum);
+        res+=pathSum(root.left,targetSum);
+        res+=pathSum(root.right,targetSum);
+        return res;
     }
-
-    public TreeNode getRoot(int[] preorder, int[] inorder,int preleft,int preright,int inoleft,int inoright)
+    public int rootSum(TreeNode root,long targetSum)
     {
-        if (preleft>preright && inoleft>inoright)return new TreeNode(preorder[preleft]);
+        if (root==null)return 0;
+        int ret=0;
+        int val=root.val;
+        if (val==targetSum)ret++;
 
-        Integer rootIndex = map.get(preorder[preleft]);
-        int len=rootIndex-inoleft;
-        TreeNode root=new TreeNode(preorder[preleft]);
-        root.left=getRoot(preorder,inorder,preleft+1,preleft+len,inoleft, rootIndex-1);
-        root.right=getRoot(preorder,inorder,preleft+len+1,preright, rootIndex+1,inoright);
-        return root;
+        ret +=rootSum(root.left,targetSum-val);
+        ret +=rootSum(root.right,targetSum-val);
+        return  ret;
     }
+
+    public int pathSum2(TreeNode root, int targetSum)
+    {
+        Map<Long, Integer> prefix = new HashMap<Long, Integer>();
+        prefix.put(0L, 1);
+        return dfs(root, prefix, 0, targetSum);
+    }
+
+    private int dfs(TreeNode root, Map<Long, Integer> prefix,long curr, int targetSum)
+    {
+        if (root==null)return 0;
+        int ret=0;
+        curr+=root.val;
+
+        ret=prefix.getOrDefault(curr-targetSum,0);
+
+        prefix.put(curr,prefix.getOrDefault(curr,0)+1);
+
+        ret+=dfs(root.left,prefix,curr,targetSum);
+        ret+=dfs(root.right,prefix,curr,targetSum);
+
+        prefix.put(curr,prefix.getOrDefault(curr,0)-1);
+        return ret;
+
+    }
+
 }
+
 
 
