@@ -31,51 +31,37 @@ class TreeNode {
 }
 
 class Solution {
-    public int pathSum(TreeNode root, int targetSum) {
-        if (root==null)return 0;
-        int res=rootSum(root,targetSum);
-        res+=pathSum(root.left,targetSum);
-        res+=pathSum(root.right,targetSum);
-        return res;
+    Map<Integer,TreeNode>parent =new HashMap<>();
+    Set<Integer> visited=new HashSet<>();
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        dfs(root);
+        while (p!=null)
+        {
+            visited.add(p.val);
+            p = parent.get(p.val);
+        }
+        while (q!=null)
+        {
+            if (visited.contains(q.val))return q;
+            q=parent.get(q.val);
+        }
+        return null;
     }
-    public int rootSum(TreeNode root,long targetSum)
+
+    private void dfs(TreeNode root)
     {
-        if (root==null)return 0;
-        int ret=0;
-        int val=root.val;
-        if (val==targetSum)ret++;
-
-        ret +=rootSum(root.left,targetSum-val);
-        ret +=rootSum(root.right,targetSum-val);
-        return  ret;
+        if (root==null)return;
+        if (root.left!=null)
+        {
+            parent.put(root.left.val,root);
+            dfs(root.left);
+        }
+        if (root.right!=null)
+        {
+            parent.put(root.right.val,root);
+            dfs(root.right);
+        }
     }
-
-    public int pathSum2(TreeNode root, int targetSum)
-    {
-        Map<Long, Integer> prefix = new HashMap<Long, Integer>();
-        prefix.put(0L, 1);
-        return dfs(root, prefix, 0, targetSum);
-    }
-
-    private int dfs(TreeNode root, Map<Long, Integer> prefix,long curr, int targetSum)
-    {
-        if (root==null)return 0;
-        int ret=0;
-        curr+=root.val;
-
-        ret=prefix.getOrDefault(curr-targetSum,0);
-
-        prefix.put(curr,prefix.getOrDefault(curr,0)+1);
-
-        ret+=dfs(root.left,prefix,curr,targetSum);
-        ret+=dfs(root.right,prefix,curr,targetSum);
-
-        prefix.put(curr,prefix.getOrDefault(curr,0)-1);
-        return ret;
-
-    }
-
 }
-
 
 
