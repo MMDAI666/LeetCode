@@ -14,35 +14,52 @@ public class LeetCode {
 
 
 class Solution {
-    public int numIslands(char[][] grid) {
-        int ans=0;
-        for (int i = 0; i < grid.length; i++)
+    public int orangesRotting(int[][] grid) {
+        //1.定义2个int数组，2个一组来记录腐烂橘子的上下左右位置。腐烂橘子(0，0)
+        int[]dx=new int[]{-1,1,0,0};
+        int[]dy=new int[]{0,0,-1,1};
+
+        int step=0;
+        int flash=0;
+
+        int row=grid.length;
+        int col=grid[0].length;
+
+        Queue<int[]>queue=new ArrayDeque<>();
+
+        for (int i = 0; i < row; i++)
         {
-            for (int j = 0; j < grid[0].length; j++)
+            for (int j = 0; j < col; j++)
             {
-                if (dfs(grid,i,j))ans++;
+                if (grid[i][j]==1)flash++;
+                if (grid[i][j]==2)
+                {
+                    queue.offer(new int[]{i,j});
+                }
             }
         }
-        return ans;
-    }
 
-    public boolean dfs(char[][] grid,int r,int c)
-    {
-        if (!inArea(grid,r,c))return false;
-        if (grid[r][c]!='1')return false;
-
-        grid[r][c]='2';
-
-        dfs(grid, r - 1, c);
-        dfs(grid, r + 1, c);
-        dfs(grid, r, c - 1);
-        dfs(grid, r, c + 1);
-        return true;
-    }
-
-    private boolean inArea(char[][] grid,int r,int c)
-    {
-        return 0<=r&&r<grid.length&&0<=c&&c<grid[0].length;
+        while (flash>0&&!queue.isEmpty())
+        {
+            step++;
+            int size=queue.size();
+            for (int i = 0; i < size; i++)
+            {
+                int[] poll = queue.poll();
+                for (int j = 0; j < 4; j++)
+                {
+                    int x=poll[0]+dx[j];
+                    int y=poll[1]+dy[j];
+                    if (x>=0&&x<row && y>=0&&y<col &&grid[x][y]==1)
+                    {
+                        grid[x][y]=2;
+                        queue.offer(new int[]{x,y});
+                        flash--;
+                    }
+                }
+            }
+        }
+        return flash>0?-1:step;
     }
 }
 
