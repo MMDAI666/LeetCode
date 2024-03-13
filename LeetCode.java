@@ -14,52 +14,40 @@ public class LeetCode {
 
 
 class Solution {
-    public int orangesRotting(int[][] grid) {
-        //1.定义2个int数组，2个一组来记录腐烂橘子的上下左右位置。腐烂橘子(0，0)
-        int[]dx=new int[]{-1,1,0,0};
-        int[]dy=new int[]{0,0,-1,1};
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int res=0;
 
-        int step=0;
-        int flash=0;
+        ArrayList<List<Integer>> list=new ArrayList<>(numCourses);
+        int[] in=new int[numCourses];
 
-        int row=grid.length;
-        int col=grid[0].length;
+        Queue<Integer> queue=new ArrayDeque<>();
 
-        Queue<int[]>queue=new ArrayDeque<>();
+        for (int i = 0; i < numCourses; i++) list.add(new ArrayList<>());
 
-        for (int i = 0; i < row; i++)
+        for (int[] p : prerequisites)
         {
-            for (int j = 0; j < col; j++)
-            {
-                if (grid[i][j]==1)flash++;
-                if (grid[i][j]==2)
-                {
-                    queue.offer(new int[]{i,j});
-                }
-            }
+            in[p[0]]++;
+            list.get(p[1]).add(p[0]);
         }
 
-        while (flash>0&&!queue.isEmpty())
+
+        for (int i = 0; i < in.length; i++) if (in[i]<=0)queue.offer(i);
+
+
+        while (!queue.isEmpty())
         {
-            step++;
-            int size=queue.size();
-            for (int i = 0; i < size; i++)
+            Integer poll = queue.poll();
+            res++;
+            for (Integer i : list.get(poll))
             {
-                int[] poll = queue.poll();
-                for (int j = 0; j < 4; j++)
-                {
-                    int x=poll[0]+dx[j];
-                    int y=poll[1]+dy[j];
-                    if (x>=0&&x<row && y>=0&&y<col &&grid[x][y]==1)
-                    {
-                        grid[x][y]=2;
-                        queue.offer(new int[]{x,y});
-                        flash--;
-                    }
-                }
+                in[i]--;
+                if (in[i]<=0)queue.offer(i);
             }
+            if (res>=numCourses)return true;
         }
-        return flash>0?-1:step;
+
+        return false;
+
+
     }
 }
-
