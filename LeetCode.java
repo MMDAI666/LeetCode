@@ -13,41 +13,48 @@ public class LeetCode {
 
 
 
-class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        int res=0;
+class Trie {
+    private Trie[] children;
+    boolean isEnd;
 
-        ArrayList<List<Integer>> list=new ArrayList<>(numCourses);
-        int[] in=new int[numCourses];
+    public Trie() {
+        children=new Trie[26];
+        isEnd=false;
+    }
 
-        Queue<Integer> queue=new ArrayDeque<>();
-
-        for (int i = 0; i < numCourses; i++) list.add(new ArrayList<>());
-
-        for (int[] p : prerequisites)
+    public void insert(String word) {
+        Trie node=this;
+        for (int i = 0; i < word.length(); i++)
         {
-            in[p[0]]++;
-            list.get(p[1]).add(p[0]);
+            char c = word.charAt(i);
+            int index=c-'a';
+            if (node.children[index]==null)node.children[index]=new Trie();
+            node=node.children[index];
         }
+        node.isEnd=true;
+    }
 
-
-        for (int i = 0; i < in.length; i++) if (in[i]<=0)queue.offer(i);
-
-
-        while (!queue.isEmpty())
+    public boolean search(String word) {
+        Trie node=this;
+        for (int i = 0; i < word.length(); i++)
         {
-            Integer poll = queue.poll();
-            res++;
-            for (Integer i : list.get(poll))
-            {
-                in[i]--;
-                if (in[i]<=0)queue.offer(i);
-            }
-            if (res>=numCourses)return true;
+            char c = word.charAt(i);
+            int index=c-'0';
+            if (node.children[index]==null)return false;
+            node=node.children[index];
         }
+        return node.isEnd;
+    }
 
-        return false;
-
-
+    public boolean startsWith(String prefix) {
+        Trie node=this;
+        for (int i = 0; i < prefix.length(); i++)
+        {
+            char c = prefix.charAt(i);
+            int index=c-'0';
+            if (node.children[index]==null)return false;
+            node=node.children[index];
+        }
+        return true;
     }
 }
