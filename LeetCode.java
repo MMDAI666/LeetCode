@@ -13,48 +13,34 @@ public class LeetCode {
 
 
 
-class Trie {
-    private Trie[] children;
-    boolean isEnd;
-
-    public Trie() {
-        children=new Trie[26];
-        isEnd=false;
+class Solution {
+    private int[] flag;
+    private List<List<Integer>> res;
+    public List<List<Integer>> permute(int[] nums) {
+        if (nums==null||nums.length==0)return null;
+        res=new ArrayList<>();
+        flag=new int[nums.length];
+        dfs(nums,new ArrayList<Integer>());
+        return res;
     }
 
-    public void insert(String word) {
-        Trie node=this;
-        for (int i = 0; i < word.length(); i++)
+    private void dfs(int[] nums, ArrayList<Integer> temp)
+    {
+        if (temp.size()==nums.length)
         {
-            char c = word.charAt(i);
-            int index=c-'a';
-            if (node.children[index]==null)node.children[index]=new Trie();
-            node=node.children[index];
+            res.add(new ArrayList<>(temp));
+            return;
         }
-        node.isEnd=true;
-    }
-
-    public boolean search(String word) {
-        Trie node=this;
-        for (int i = 0; i < word.length(); i++)
+        for (int i = 0; i < nums.length; i++)
         {
-            char c = word.charAt(i);
-            int index=c-'0';
-            if (node.children[index]==null)return false;
-            node=node.children[index];
+            if (flag[i]==0)
+            {
+                flag[i]=1;
+                temp.add(nums[i]);
+                dfs(nums,temp);
+                temp.remove(temp.size()-1);
+                flag[i]=0;
+            }
         }
-        return node.isEnd;
-    }
-
-    public boolean startsWith(String prefix) {
-        Trie node=this;
-        for (int i = 0; i < prefix.length(); i++)
-        {
-            char c = prefix.charAt(i);
-            int index=c-'0';
-            if (node.children[index]==null)return false;
-            node=node.children[index];
-        }
-        return true;
     }
 }
