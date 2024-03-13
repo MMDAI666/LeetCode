@@ -14,33 +14,22 @@ public class LeetCode {
 
 
 class Solution {
-    private int[] flag;
-    private List<List<Integer>> res;
-    public List<List<Integer>> permute(int[] nums) {
-        if (nums==null||nums.length==0)return null;
-        res=new ArrayList<>();
-        flag=new int[nums.length];
-        dfs(nums,new ArrayList<Integer>());
-        return res;
-    }
-
-    private void dfs(int[] nums, ArrayList<Integer> temp)
-    {
-        if (temp.size()==nums.length)
+    public List<List<Integer>> subsets(int[] nums) {
+        int n=nums.length;
+        int subLen=1<<n;
+        List<List<Integer>> res=new ArrayList<>();
+        for (int i = 0; i < subLen; i++)
         {
-            res.add(new ArrayList<>(temp));
-            return;
-        }
-        for (int i = 0; i < nums.length; i++)
-        {
-            if (flag[i]==0)
+            List<Integer> temp=new ArrayList<>();
+            for (int j = 0; j < n; j++)
             {
-                flag[i]=1;
-                temp.add(nums[i]);
-                dfs(nums,temp);
-                temp.remove(temp.size()-1);
-                flag[i]=0;
+                if ((i&(1<<j))!=0)
+                {
+                    temp.add(nums[j]);
+                }
             }
+            res.add(temp);
         }
+        return res;
     }
 }
