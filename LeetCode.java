@@ -12,33 +12,32 @@ public class LeetCode
     }
 }
 class Solution {
-    public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        int len=candidates.length;
-        List<List<Integer>> res=new ArrayList<>();
-        if (len==0)return res;
-        Arrays.sort(candidates);
-        Deque<Integer> stack=new ArrayDeque<>();
-        dfs(candidates,0,len,target,stack,res);
-        return res;
+    public List<String> generateParenthesis(int n) {
+        List<String> ans=new ArrayList<>();
+        backtrack(ans,n,new StringBuilder(), 0,0);
+        return ans;
     }
 
-    private void dfs(int[] candidates, int start, int end, int target, Deque<Integer> stack, List<List<Integer>> res)
+    private void backtrack(List<String> ans, int n, StringBuilder stringBuilder, int close, int open)
     {
-        if (target == 0)
+        if (stringBuilder.length()==n*2)
         {
-            res.add(new ArrayList<>(stack));
+            ans.add(stringBuilder.toString());
             return;
         }
-
-        for (int i = start; i < end; i++)
+        if (close<n)
         {
-            if (target-candidates[i]<0)break;
-            stack.offer(candidates[i]);
-            dfs(candidates,i,end,target-candidates[i],stack,res);
-            stack.removeLast();
+            stringBuilder.append("(");
+            backtrack(ans,n,stringBuilder,close+1,open);
+            stringBuilder.deleteCharAt(stringBuilder.length()-1);
+        }
+        if (open<close)
+        {
+            stringBuilder.append(")");
+            backtrack(ans,n,stringBuilder,close,open+1);
+            stringBuilder.deleteCharAt(stringBuilder.length()-1);
         }
     }
-
 }
 
 
