@@ -12,32 +12,58 @@ public class LeetCode
     }
 }
 class Solution {
-    public List<String> generateParenthesis(int n) {
-        List<String> ans=new ArrayList<>();
-        backtrack(ans,n,new StringBuilder(), 0,0);
-        return ans;
+
+    int m;int n;
+
+    int[][] flag;
+    public boolean exist(char[][] board, String word)
+    {
+        m=board.length;
+        n=board[0].length;
+        flag=new int[m][n];
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (board[i][j]==word.charAt(0))
+                {
+                    flag[i][j]=1;
+                    if(back(board,word,1,i,j))return true;
+                    flag[i][j]=0;
+                }
+            }
+        }
+        return false;
     }
 
-    private void backtrack(List<String> ans, int n, StringBuilder stringBuilder, int close, int open)
+
+    private boolean back(char[][] board, String word, int index,int x,int y)
     {
-        if (stringBuilder.length()==n*2)
+        if (index>=word.length())return true;
+        int[][] temp=new int[][]
+                {
+                        {x,y-1},
+                        {x,y+1},
+                        {x+1,y},
+                        {x-1,y}
+                } ;
+        //（x,y-1）(x-1,y) （x,y+1）(x+1,y)
+        for (int[] ints : temp)
         {
-            ans.add(stringBuilder.toString());
-            return;
+            if ((check(ints) && board[ints[0]][ints[1]] == word.charAt(index) && flag[ints[0]][ints[1]]==0) )
+            {
+                if (index==word.length()-1)return true;
+                flag[ints[0]][ints[1]] = 1;
+                if(back(board, word, index + 1, ints[0], ints[1]))return true;
+                flag[ints[0]][ints[1]] = 0;
+            }
         }
-        if (close<n)
-        {
-            stringBuilder.append("(");
-            backtrack(ans,n,stringBuilder,close+1,open);
-            stringBuilder.deleteCharAt(stringBuilder.length()-1);
-        }
-        if (open<close)
-        {
-            stringBuilder.append(")");
-            backtrack(ans,n,stringBuilder,close,open+1);
-            stringBuilder.deleteCharAt(stringBuilder.length()-1);
-        }
+        return false;
+    }
+
+    private boolean check(int[] ints)
+    {
+        return 0<=ints[0] && ints[0]<m && 0<=ints[1] && ints[1]<n;
     }
 }
-
 
