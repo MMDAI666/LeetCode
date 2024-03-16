@@ -1,69 +1,56 @@
 import org.w3c.dom.Node;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 public class LeetCode
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
 
     }
 }
 class Solution {
-
-    int m;int n;
-
-    int[][] flag;
-    public boolean exist(char[][] board, String word)
-    {
-        m=board.length;
-        n=board[0].length;
-        flag=new int[m][n];
-        for (int i = 0; i < m; i++)
-        {
-            for (int j = 0; j < n; j++)
-            {
-                if (board[i][j]==word.charAt(0))
-                {
-                    flag[i][j]=1;
-                    if(back(board,word,1,i,j))return true;
-                    flag[i][j]=0;
-                }
-            }
-        }
-        return false;
+    private List<List<String>>ans=new ArrayList<>();
+    private List<String>path=new ArrayList<>();
+    private String s;
+    public List<List<String>> partition(String s) {
+        this.s=s;
+        dfs(0);
+        return ans;
     }
 
-
-    private boolean back(char[][] board, String word, int index,int x,int y)
+    private void dfs(int i)
     {
-        if (index>=word.length())return true;
-        int[][] temp=new int[][]
-                {
-                        {x,y-1},
-                        {x,y+1},
-                        {x+1,y},
-                        {x-1,y}
-                } ;
-        //（x,y-1）(x-1,y) （x,y+1）(x+1,y)
-        for (int[] ints : temp)
+        if (i==s.length())
         {
-            if ((check(ints) && board[ints[0]][ints[1]] == word.charAt(index) && flag[ints[0]][ints[1]]==0) )
-            {
-                if (index==word.length()-1)return true;
-                flag[ints[0]][ints[1]] = 1;
-                if(back(board, word, index + 1, ints[0], ints[1]))return true;
-                flag[ints[0]][ints[1]] = 0;
-            }
+            ans.add(new ArrayList<>(path));
+            return;
         }
-        return false;
+
+        for (int j = i; j < s.length(); j++)
+        {
+            if(isPalindrome(i,j))
+            {
+                path.add(s.substring(i,j+1));
+                dfs(j+1);
+                path.remove(path.size()-1);
+            }
+
+        }
     }
 
-    private boolean check(int[] ints)
+    private boolean isPalindrome(int left, int right)
     {
-        return 0<=ints[0] && ints[0]<m && 0<=ints[1] && ints[1]<n;
+        while(left<right)
+        {
+            if (s.charAt(left)!=s.charAt(right))return false;
+            left++;
+            right--;
+        }
+        return true;
+
     }
 }
-
