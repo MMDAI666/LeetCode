@@ -4,50 +4,41 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class LeetCode {
-    public static void main(String[] args) {
+public class LeetCode
+{
+    public static void main(String[] args)
+    {
 
     }
 }
-
-
-
-
 class Solution {
-    public List<String> letterCombinations(String digits) {
-        if(digits.isEmpty())return new ArrayList<>();
-        List<String> res=new ArrayList<>();
-        Long a= 0L;
-        Map<Character, String> phoneMap = new HashMap<Character, String>() {{
-            put('2', "abc");
-            put('3', "def");
-            put('4', "ghi");
-            put('5', "jkl");
-            put('6', "mno");
-            put('7', "pqrs");
-            put('8', "tuv");
-            put('9', "wxyz");
-        }};
-        backtrack(res,phoneMap,digits,0,new StringBuilder());
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        int len=candidates.length;
+        List<List<Integer>> res=new ArrayList<>();
+        if (len==0)return res;
+        Arrays.sort(candidates);
+        Deque<Integer> stack=new ArrayDeque<>();
+        dfs(candidates,0,len,target,stack,res);
         return res;
-
     }
 
-    private void backtrack(List<String> res, Map<Character, String> phoneMap, String digits, int index, StringBuilder stringBuilder)
+    private void dfs(int[] candidates, int start, int end, int target, Deque<Integer> stack, List<List<Integer>> res)
     {
-        if (index==digits.length())
+        if (target == 0)
         {
-            res.add(stringBuilder.toString());
+            res.add(new ArrayList<>(stack));
             return;
         }
-        char c = digits.charAt(index);
-        String s = phoneMap.get(c);
-        for (int i = 0; i < s.length(); i++)
-        {
-            stringBuilder.append(s.charAt(i));
-            backtrack(res,phoneMap,digits,index+1,stringBuilder);
-            stringBuilder.deleteCharAt(index);
-        }
 
+        for (int i = start; i < end; i++)
+        {
+            if (target-candidates[i]<0)break;
+            stack.offer(candidates[i]);
+            dfs(candidates,i,end,target-candidates[i],stack,res);
+            stack.removeLast();
+        }
     }
+
 }
+
+
