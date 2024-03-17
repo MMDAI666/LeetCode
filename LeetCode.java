@@ -12,45 +12,70 @@ public class LeetCode
 
     }
 }
-class Solution {
-    private List<List<String>>ans=new ArrayList<>();
-    private List<String>path=new ArrayList<>();
-    private String s;
-    public List<List<String>> partition(String s) {
-        this.s=s;
-        dfs(0);
+
+class Solution
+{
+    List<List<String>> ans = new ArrayList<>();
+
+    public List<List<String>> solveNQueens(int n)
+    {
+
+        int[] col = new int[n];
+        Arrays.fill(col, -1);
+        Set<Integer> columns = new HashSet<Integer>();
+        Set<Integer> diagonals1 = new HashSet<>();
+        Set<Integer> diagonals2 = new HashSet<>();
+        back(n, col,columns, diagonals1, diagonals2, 0);
+
         return ans;
+
     }
 
-    private void dfs(int i)
+    private void back(int n, int[] col, Set<Integer> columns,Set<Integer> diagonals1, Set<Integer> diagonals2, int r)
     {
-        if (i==s.length())
+        if (r == n)
         {
-            ans.add(new ArrayList<>(path));
+            ans.add(creat(col));
             return;
         }
 
-        for (int j = i; j < s.length(); j++)
+        for (int i = 0; i < n; i++)
         {
-            if(isPalindrome(i,j))
+            if (!columns.contains(i) && !diagonals1.contains(i - r) && !diagonals2.contains(i + r))//表示对角线不冲突
             {
-                path.add(s.substring(i,j+1));
-                dfs(j+1);
-                path.remove(path.size()-1);
+                diagonals1.add(i - r);
+                diagonals2.add(i + r);
+                columns.add(i);
+                col[r] = i;
+                back(n, col, columns,diagonals1, diagonals2, r + 1);
+                col[r] = -1;
+                columns.remove(i);
+                diagonals2.remove(i + r);
+                diagonals1.remove(i - r);
             }
-
         }
+
     }
 
-    private boolean isPalindrome(int left, int right)
+    private List<String> creat(int[] col)
     {
-        while(left<right)
-        {
-            if (s.charAt(left)!=s.charAt(right))return false;
-            left++;
-            right--;
-        }
-        return true;
+        List<String> temp = new ArrayList<>();
 
+        for (Integer c : col)
+        {
+            StringBuilder s = new StringBuilder();
+            for (int i = 0; i < c; i++)
+            {
+                s.append(".");
+            }
+            s.append("Q");
+            for (int j = c + 1; j < col.length; j++)
+            {
+                s.append(".");
+            }
+            temp.add(s.toString());
+        }
+
+        return temp;
     }
 }
