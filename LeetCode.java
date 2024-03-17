@@ -13,69 +13,26 @@ public class LeetCode
     }
 }
 
-class Solution
-{
-    List<List<String>> ans = new ArrayList<>();
-
-    public List<List<String>> solveNQueens(int n)
-    {
-
-        int[] col = new int[n];
-        Arrays.fill(col, -1);
-        Set<Integer> columns = new HashSet<Integer>();
-        Set<Integer> diagonals1 = new HashSet<>();
-        Set<Integer> diagonals2 = new HashSet<>();
-        back(n, col,columns, diagonals1, diagonals2, 0);
-
+class Solution {
+    public int searchInsert(int[] nums, int target) {
+        int n=nums.length;
+        int left=0;
+        int right=n-1;
+        int ans=n;
+        while (left<=right)
+        {
+            int mid=(left+right)/2;
+            if (nums[mid]==target)return mid;
+            if (target<nums[mid])
+            {
+                ans=mid;
+                right=mid-1;
+            }
+            else
+            {
+                left=mid+1;
+            }
+        }
         return ans;
-
-    }
-
-    private void back(int n, int[] col, Set<Integer> columns,Set<Integer> diagonals1, Set<Integer> diagonals2, int r)
-    {
-        if (r == n)
-        {
-            ans.add(creat(col));
-            return;
-        }
-
-        for (int i = 0; i < n; i++)
-        {
-            if (!columns.contains(i) && !diagonals1.contains(i - r) && !diagonals2.contains(i + r))//表示对角线不冲突
-            {
-                diagonals1.add(i - r);
-                diagonals2.add(i + r);
-                columns.add(i);
-                col[r] = i;
-                back(n, col, columns,diagonals1, diagonals2, r + 1);
-                col[r] = -1;
-                columns.remove(i);
-                diagonals2.remove(i + r);
-                diagonals1.remove(i - r);
-            }
-        }
-
-    }
-
-    private List<String> creat(int[] col)
-    {
-        List<String> temp = new ArrayList<>();
-
-        for (Integer c : col)
-        {
-            StringBuilder s = new StringBuilder();
-            for (int i = 0; i < c; i++)
-            {
-                s.append(".");
-            }
-            s.append("Q");
-            for (int j = c + 1; j < col.length; j++)
-            {
-                s.append(".");
-            }
-            temp.add(s.toString());
-        }
-
-        return temp;
     }
 }
