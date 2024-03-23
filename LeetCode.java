@@ -9,30 +9,29 @@ public class LeetCode
 {
     public static void main(String[] args) throws IOException
     {
+        System.out.println(new Solution().distinctIntegers(5));
     }
 }
 
 class Solution {
-    public int findMin(int[] nums) {
-        int n=nums.length;
-        int left=0;
-        int right=n-1;
-        int min=Integer.MAX_VALUE;
-        while (left<=right)
+    public int distinctIntegers(int n) {
+        Deque<Integer> deque=new ArrayDeque<>();
+        deque.add(n);
+        Set<Integer> set=new HashSet<>();
+
+        while (!deque.isEmpty())
         {
-            int mid=(left+right)/2;
-            if(nums[mid]<min)min=nums[mid];
-            if (nums[left]<=nums[mid])
+            Integer head = deque.pollFirst();
+            set.add(head);
+            for (Integer i = 1; i <= head; i++)
             {
-                if (min>nums[left])min=nums[left];
-                left=mid+1;
-
-
-            }else
-            {
-                right=mid-1;
+                if (head%i==1)
+                {
+                    deque.offerLast(i);
+                }
             }
         }
-        return min;
+        return set.size();
+        //return n==1?1:n-1;(数学不难证明)
     }
 }
