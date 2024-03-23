@@ -13,27 +13,35 @@ public class LeetCode
     }
 }
 
-class Solution {
-    public boolean isValid(String s) {
-        Deque<Character> stack=new ArrayDeque<>();
-        for (int i = 0; i < s.length(); i++)
-        {
-            if (s.charAt(i)=='('||s.charAt(i)=='{'||s.charAt(i)=='[')stack.offerLast(s.charAt(i));
-            else if(s.charAt(i)==')'||s.charAt(i)=='}'||s.charAt(i)==']')
-            {
-                Character c = stack.peekLast();
-                if (c==null||!isOk(c,s.charAt(i)))return false;
-                stack.pollLast();
-            }
-        }
-        return stack.isEmpty();
+class MinStack {
+    Deque<Integer> stack;
+    Deque<Integer> minStack;
+
+    public MinStack() {
+        stack=new ArrayDeque<>();
+        minStack=new ArrayDeque<>();
+        minStack.push(Integer.MAX_VALUE);
     }
 
-    private boolean isOk(Character c, char c1)
-    {
-        if (c1==')')return c.equals('(');
-        else if (c1=='}')return c.equals('{');
-        else if (c1==']')return c.equals('[');
-        return false;
+    public void push(int val) {
+        stack.push(val);
+        int min=minStack.peek();
+        if(val<min)min=val;
+        minStack.push(min);
+    }
+
+    public void pop() {
+        stack.pop();
+        minStack.pop();
+
+    }
+
+    public int top() {
+
+        return stack.peek();
+    }
+
+    public int getMin() {
+        return minStack.peek();
     }
 }
