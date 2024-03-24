@@ -16,24 +16,31 @@ public class LeetCode
 
 class Solution
 {
-    public int[] dailyTemperatures(int[] temperatures)
+    public int largestRectangleArea(int[] heights)
     {
+        int n = heights.length;
+        int[] left = new int[n];
+        int[] right = new int[n];
         Deque<Integer> stack = new ArrayDeque<>();
-        int n = temperatures.length;
-        int[] ans = new int[n];
+
         for (int i = 0; i < n; i++)
         {
-            if (stack.isEmpty()) stack.offerLast(i);
-            else
-            {
-                while (!stack.isEmpty() && temperatures[i] > temperatures[stack.peekLast()])
-                {
-                    int k = stack.pollLast();
-                    ans[k] = i - k;
-                }
-                stack.offerLast(i);
-            }
+            while (!stack.isEmpty() && heights[stack.peekLast()] >= heights[i]) stack.pollLast();
+            left[i] = stack.isEmpty() ? -1 : stack.peekLast();
+            stack.offerLast(i);
         }
-        return ans;
+
+        stack.clear();
+        for (int i = n - 1; i >= 0; i--)
+        {
+            while (!stack.isEmpty() && heights[stack.peekLast()] >= heights[i]) stack.pollLast();
+            right[i] = stack.isEmpty() ? n : stack.peekLast();
+            stack.offerLast(i);
+        }
+
+        int maxArea = 0;
+        for (int i = 0; i < n; i++) maxArea = Math.max(maxArea, (right[i] - left[i] - 1) * heights[i]);
+
+        return maxArea;
     }
 }
