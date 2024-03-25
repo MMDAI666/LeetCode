@@ -14,37 +14,17 @@ public class LeetCode
     }
 }
 
-class MedianFinder {
-    PriorityQueue<Integer> minpq;
-    PriorityQueue<Integer> maxpq;
+class Solution {
+    public int maxProfit(int[] prices) {
+        int n=prices.length;
 
-    public MedianFinder() {
-        minpq=new PriorityQueue<>((x,y)->y-x);//大顶堆
-        maxpq=new PriorityQueue<>((x,y)->x-y);//小顶堆
-    }
-
-    public void addNum(int num) {
-        if (minpq.isEmpty())
+        int minIndex=0;
+        int profit=0;
+        for (int i = 0; i < prices.length; i++)
         {
-            minpq.offer(num);
-        }else
-        {
-            if (num<=minpq.peek())
-            {
-                minpq.offer(num);
-                if (minpq.size()>maxpq.size()+1) maxpq.offer(minpq.poll());
-
-            }else
-            {
-                maxpq.offer(num);
-                if(maxpq.size()>minpq.size())minpq.offer(maxpq.poll());
-            }
+            if (prices[i]<prices[minIndex])minIndex=i;
+            if (prices[i]-prices[minIndex]>profit) profit=prices[i]-prices[minIndex];
         }
-
-    }
-
-    public double findMedian() {
-        if (minpq.size()== maxpq.size())return (minpq.peek()+maxpq.peek())/2.0;
-        else return minpq.peek();
+        return profit;
     }
 }
