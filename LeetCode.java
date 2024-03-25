@@ -14,19 +14,37 @@ public class LeetCode
     }
 }
 
-class Solution {
-    public int findKthLargest(int[] nums, int k) {
-        PriorityQueue<Integer> pq=new PriorityQueue<>((x,y)->y-x);
+class MedianFinder {
+    PriorityQueue<Integer> minpq;
+    PriorityQueue<Integer> maxpq;
 
-        for (int i = 0; i < nums.length; i++)
-        {
-            pq.add(nums[i]);
-        }
-        for (int i = 0; i < k-1; i++)
-        {
-            pq.remove();
-        }
-        return pq.peek();
+    public MedianFinder() {
+        minpq=new PriorityQueue<>((x,y)->y-x);//大顶堆
+        maxpq=new PriorityQueue<>((x,y)->x-y);//小顶堆
+    }
 
+    public void addNum(int num) {
+        if (minpq.isEmpty())
+        {
+            minpq.offer(num);
+        }else
+        {
+            if (num<=minpq.peek())
+            {
+                minpq.offer(num);
+                if (minpq.size()>maxpq.size()+1) maxpq.offer(minpq.poll());
+
+            }else
+            {
+                maxpq.offer(num);
+                if(maxpq.size()>minpq.size())minpq.offer(maxpq.poll());
+            }
+        }
+
+    }
+
+    public double findMedian() {
+        if (minpq.size()== maxpq.size())return (minpq.peek()+maxpq.peek())/2.0;
+        else return minpq.peek();
     }
 }
