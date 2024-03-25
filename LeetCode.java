@@ -15,16 +15,13 @@ public class LeetCode
 }
 
 class Solution {
-    public int maxProfit(int[] prices) {
-        int n=prices.length;
-
-        int minIndex=0;
-        int profit=0;
-        for (int i = 0; i < prices.length; i++)
+    public boolean canJump(int[] nums) {
+        int k=0;
+        for (int i = 0; i < nums.length; i++)
         {
-            if (prices[i]<prices[minIndex])minIndex=i;
-            if (prices[i]-prices[minIndex]>profit) profit=prices[i]-prices[minIndex];
+            if (k>= nums.length-1)return true;
+            if (i<=k)k=Math.max(i+nums[i],k);
         }
-        return profit;
+        return false;
     }
 }
