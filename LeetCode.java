@@ -16,25 +16,17 @@ public class LeetCode
 
 
 class Solution {
-    public List<Integer> partitionLabels(String s) {
-        int left=0;
-        int right=0;
-        List<Integer> res=new ArrayList<>();
-        int[] endIndex=new int[26];
-        for (int i = 0; i < s.length(); i++)
-        {
-            endIndex[s.charAt(i)-'a']=i;
-        }
+    public int climbStairs(int n) {
 
-        for (int i = 0; i < s.length(); i++)
+        int p=0;
+        int q=0;
+        int r=1;
+        for (int i = 0; i <= n; i++)
         {
-            right=Math.max(right,endIndex[(s.charAt(i))-'a']);
-            if (i==right)
-            {
-                res.add(right-left+1);
-                left=right+1;
-            }
+            p=q;
+            q=r;
+            r=p+q;
         }
-        return res;
+        return r;
     }
 }
