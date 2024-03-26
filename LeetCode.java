@@ -10,25 +10,31 @@ public class LeetCode
     public static void main(String[] args) throws IOException
     {
 
-        System.out.println(new Solution());
+        
     }
 }
 
-class Solution {
-    public int jump(int[] nums) {
-        int end=0;
-        int step=0;
-        int nextEnd=0;
-        for (int i = 0; i < nums.length-1; i++)
-        {
-            nextEnd=Math.max(i+nums[i],nextEnd);
 
-            if (i==end)
+class Solution {
+    public List<Integer> partitionLabels(String s) {
+        int left=0;
+        int right=0;
+        List<Integer> res=new ArrayList<>();
+        int[] endIndex=new int[26];
+        for (int i = 0; i < s.length(); i++)
+        {
+            endIndex[s.charAt(i)-'a']=i;
+        }
+
+        for (int i = 0; i < s.length(); i++)
+        {
+            right=Math.max(right,endIndex[(s.charAt(i))-'a']);
+            if (i==right)
             {
-                step++;
-                end=nextEnd;
+                res.add(right-left+1);
+                left=right+1;
             }
         }
-        return step;
+        return res;
     }
 }
