@@ -15,18 +15,19 @@ public class LeetCode
 
 
 class Solution {
-    public int numSquares(int n) {
-        int[] f=new int[n+1];
-        for (int i = 1; i <= n; i++)
+    public int coinChange(int[] coins, int amount) {
+        int n=coins.length;
+        int[] dp=new int[amount+1];
+        Arrays.fill(dp,amount+1);
+        dp[0]=0;
+        for (int i = 1; i <= amount; i++)
         {
-            int minn=Integer.MAX_VALUE;
-            for(int j=1;j<Math.sqrt(i);j++)
+            for (int j = 0; j < coins.length; j++)
             {
-                minn=Math.min(minn,f[i-j*j]);
+                if (coins[j]<=i) dp[i]=Math.min(dp[i],dp[i-coins[j]]+1);
             }
-            f[i]=1+minn;
         }
-        return f[n];
+        return dp[amount]>amount?-1:dp[amount];
     }
 }
 
