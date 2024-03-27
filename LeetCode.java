@@ -10,28 +10,24 @@ public class LeetCode
     public static void main(String[] args) throws IOException
     {
 
-        
     }
 }
 
 
 class Solution {
-    public int rob(int[] nums) {
-        int n=nums.length;
-        if(n<2)return nums[0];
-        //int[] dp=new int[n];
-
-        int p=nums[0];
-        int q=Math.max(nums[0],nums[1]);
-        int r=Math.max(p,q);
-
-        for (int i = 2; i < n; i++)
+    public int numSquares(int n) {
+        int[] f=new int[n+1];
+        for (int i = 1; i <= n; i++)
         {
-            r=Math.max(p+nums[i],q);
-            p=q;
-            q=r;
-            //dp[i]=Math.max(dp[i-2]+nums[i],dp[i-1]);
+            int minn=Integer.MAX_VALUE;
+            for(int j=1;j<Math.sqrt(i);j++)
+            {
+                minn=Math.min(minn,f[i-j*j]);
+            }
+            f[i]=1+minn;
         }
-        return r;
+        return f[n];
     }
 }
+
+
