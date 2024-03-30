@@ -15,24 +15,19 @@ public class LeetCode
 
 
 class Solution {
-    public int lengthOfLIS(int[] nums) {
-        if (nums.length==1)return 1;
-        int n=nums.length;
-        int[] dp=new int[n+1];
-        dp[0]=1;
-        int m=1;
-        for (int i = 0; i < n; i++)
-        {
-            dp[i]=1;
-            for (int j = 0; j < i; j++)
-            {
-                if (nums[j]<nums[i])dp[i]=Math.max(dp[i],dp[j]+1);
-            }
-            m=Math.max(m,dp[i]);
-        }
+    public int maxProduct(int[] nums) {
+        int max=nums[0];
+        int min=nums[0];
+        int ans=nums[0];
 
-        return m;
+        for (int i = 1; i < nums.length; i++)
+        {
+            int ma=max,mi=min;
+            min=Math.min(ma*nums[i],Math.min(mi*nums[i],nums[i]));
+            max=Math.max(ma*nums[i],Math.max(mi*nums[i],nums[i]));
+            ans=Math.max(ans,max);
+        }
+        return ans;
     }
 }
-
 
