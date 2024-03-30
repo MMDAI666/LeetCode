@@ -14,35 +14,61 @@ public class LeetCode
 }
 
 
-class Solution {
-    public boolean canPartition(int[] nums) {
-        int sum=0;
-        int max=Integer.MIN_VALUE;
-        for (int i = 0; i < nums.length; i++)
+class Solution
+{
+    public int longestValidParentheses(String s)
+    {
+        int n = s.length();
+        int left = 0, right = 0;
+        int len = 0;
+        for (int i = s.length() - 1; i >= 0; i--)
         {
-            max=Math.max(max,nums[i]);
-            sum+=nums[i];
-        }
-        //奇数不可能被平分分成两个整数
-        if (sum%2==1)return false;
-
-        sum=sum/2;
-        if (max>sum)return false;
-        else if (max==sum)return true;
-
-        boolean[] dp=new  boolean[sum+1];
-
-        dp[0]=true;
-
-
-        for (int i = 0; i < nums.length; i++)
-        {
-            for (int j=sum;j>=nums[i];j--)
+            if (s.charAt(i) == '(') left++;
+            else right++;
+            if (left == right) len = Math.max(len, left * 2);
+            else if (left > right)
             {
-                dp[j]=dp[j] | dp[j-nums[i]];
+                left = 0;
+                right = 0;
             }
         }
-        return dp[sum];
+        left = 0;
+        right = 0;
+
+        for (int i = 0; i < s.length(); i++)
+        {
+            if (s.charAt(i) == '(') left++;
+            else right++;
+            if (left == right) len = Math.max(len, left * 2);
+            else if (left < right)
+            {
+                left = 0;
+                right = 0;
+            }
+        }
+        return len;
+    }
+
+    public int longestValidParenthesesWithDp(String s)
+    {
+        int n=s.length();
+        int[] dp=new int[n];
+        int max=0;
+        for (int i = 1; i < n; i++)
+        {
+            if (s.charAt(i)==')')
+            {
+                if (s.charAt(i-1)=='(')dp[i]= (i-2>=0?dp[i-2]:0)+2;
+                else if (i-dp[i-1]>0 &&  s.charAt(i-dp[i-1]-1)=='(')
+                {
+                    dp[i] = dp[i - 1] +
+                            ((i - dp[i - 1]) -2 >= 0 ?
+                                    dp[i - dp[i - 1] - 2] : 0)
+                            + 2;
+                }
+                max=Math.max(max,dp[i]);
+            }
+        }
+        return max;
     }
 }
-
