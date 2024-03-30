@@ -15,19 +15,34 @@ public class LeetCode
 
 
 class Solution {
-    public int maxProduct(int[] nums) {
-        int max=nums[0];
-        int min=nums[0];
-        int ans=nums[0];
-
-        for (int i = 1; i < nums.length; i++)
+    public boolean canPartition(int[] nums) {
+        int sum=0;
+        int max=Integer.MIN_VALUE;
+        for (int i = 0; i < nums.length; i++)
         {
-            int ma=max,mi=min;
-            min=Math.min(ma*nums[i],Math.min(mi*nums[i],nums[i]));
-            max=Math.max(ma*nums[i],Math.max(mi*nums[i],nums[i]));
-            ans=Math.max(ans,max);
+            max=Math.max(max,nums[i]);
+            sum+=nums[i];
         }
-        return ans;
+        //奇数不可能被平分分成两个整数
+        if (sum%2==1)return false;
+
+        sum=sum/2;
+        if (max>sum)return false;
+        else if (max==sum)return true;
+
+        boolean[] dp=new  boolean[sum+1];
+
+        dp[0]=true;
+
+
+        for (int i = 0; i < nums.length; i++)
+        {
+            for (int j=sum;j>=nums[i];j--)
+            {
+                dp[j]=dp[j] | dp[j-nums[i]];
+            }
+        }
+        return dp[sum];
     }
 }
 
